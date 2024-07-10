@@ -16,7 +16,7 @@ for sheet_name, df in excel_data.items():
     if sheet_name == 'Names_Ref':
         names_ref = df
 
-#CREATE DF TO USE --------------------------------
+#CREATE DF TO USE -------------------------------
 
 #date structure
 timestamp1 = str (data ['Event Start Date'].values [0])
