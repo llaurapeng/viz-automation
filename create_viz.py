@@ -206,11 +206,11 @@ cell_font_size = [16, 12, 12, 12, 12, 12]
 colors_text = [
     ['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black'],
     ['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black'],
-    ['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black']
+    ['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black'],
     ['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black']
 ]
 
-colors_text = colors_text + [text_color]
+colors_text.append ([text_color])
 colors_text.append (['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black'])
 colors_text.append (['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black'])
 
