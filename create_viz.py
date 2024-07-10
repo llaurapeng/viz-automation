@@ -4,7 +4,7 @@ import plotly.graph_objs as go
 import plotly.express as px
 import plotly.io as pio
 
-#READ IN DATA---------------------------------
+#READ IN DATA--------------------------------
 
 excel_data = pd.read_excel('sample.xlsx', sheet_name=None)
 
