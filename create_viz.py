@@ -130,7 +130,7 @@ for i, row in sorted_df.iterrows ():
         colors.append ('#E1EEF2')
 
     if row ['Index'] > 120:
-        text_color.append ('green')
+        text_color.append ('#26ff26')
     elif row['Index'] <=80:
         text_color.append ('red')
     else:
