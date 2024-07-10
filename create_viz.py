@@ -210,9 +210,10 @@ colors_text = [
     ['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black']
 ]
 
-colors_text.append ([text_color])
+colors_text.append (text_color)
 colors_text.append (['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black'])
 colors_text.append (['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black'])
+
 
 fig2 = go.Figure(data=[go.Table(
     header=dict(values=['',
