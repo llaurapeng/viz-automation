@@ -2,7 +2,7 @@
 import pandas as pd
 import create_viz as viz
 import streamlit as st
-
+import openpyxl
 
 # Set page configuration---------------------------------
 st.set_page_config(layout="wide",
