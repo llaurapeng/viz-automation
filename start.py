@@ -132,8 +132,7 @@ class ThemeManager:
             curr_dir = os.getcwd()
 
             # Specify the new file name and path
-            directory = os.path.join(curr_dir, '/pages/')
-
+            directory = '/mount/src/viz-automation/pages'
            
 
             # Iterate over all files in the directory
