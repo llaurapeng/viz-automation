@@ -137,7 +137,7 @@ class ThemeManager:
 
 
             # Specify the new file name and path
-            #directory = curr_dir + '/pages'
+            directory = curr_dir + '/main/pages'
 
             # Iterate over all files in the directory
             for filename in os.listdir(directory):
