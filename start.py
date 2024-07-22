@@ -7,6 +7,7 @@ import openpyxl
 import streamlit as st
 from PIL import Image
 from rembg import remove 
+import onnxruntime
 import io
 import os
 import time
