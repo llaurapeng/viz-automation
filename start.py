@@ -129,7 +129,7 @@ class ThemeManager:
         #CLEARS APP ---------------------------------------
         if clear_resp == 'yes':
             # Specify the directory path
-            directory = 'llaurapeng/viz-automation/main/pages'
+            directory = '/pages'
 
             curr_dir = os.getcwd()
 
