@@ -132,7 +132,7 @@ class ThemeManager:
             curr_dir = os.getcwd()
             print (curr_dir)
             # Specify the new file name and path
-            directory = '/mount/src/viz-automation/pages'
+            directory = ''
            
             # Iterate over all files in the directory
             for filename in os.listdir(directory):
