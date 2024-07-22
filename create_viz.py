@@ -6,7 +6,6 @@ import plotly.io as pio
 import openpyxl
 import streamlit as st
 from PIL import Image
-from rembg import remove 
 import os
 
 
