@@ -3,7 +3,6 @@ plotly
 streamlit
 openpyxl
 Fragments
-Util
 rembg
 PIL
 streamlit-cropperjs
