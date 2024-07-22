@@ -130,7 +130,7 @@ class ThemeManager:
         if clear_resp == 'yes':
             # Specify the directory path
             curr_dir = os.getcwd()
-
+            print (curr_dir)
             # Specify the new file name and path
             directory = '/mount/src/viz-automation/pages'
            
