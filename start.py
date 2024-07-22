@@ -280,7 +280,7 @@ class ThemeManager:
 
     def writefile(self):
         file_content = '''
-
+curr_dir = os.getcwd()
 import pandas as pd
 #from .. import start as viz
 import streamlit as st
