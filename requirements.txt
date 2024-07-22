@@ -5,7 +5,3 @@ openpyxl
 Fragments
 rembg
 Pillow==10.0.0  
-os
-time
-io
-python>=3.8.0  
