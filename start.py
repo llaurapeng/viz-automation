@@ -516,7 +516,7 @@ color: {st.session_state['textColor']};  /* Optional: Specify text color */
                     except IOError:
                         print(f"Error: Could not write to file '{new_file_path}'.")
 
-            st.rerun()
+            
 
 
 # Usage
