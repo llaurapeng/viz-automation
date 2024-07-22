@@ -3,5 +3,6 @@ plotly
 streamlit
 openpyxl
 Fragments
-rembg
+rembg>=2.0.0
+onnxruntime>=2.18.1
 Pillow==10.0.0  
