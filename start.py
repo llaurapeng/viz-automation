@@ -189,7 +189,7 @@ class ThemeManager:
 
                     st.image (resized)
                     st.session_state ['logo'] = resized
-         '''       
+        '''       
         #change logo REMOVE BACKGROUND------------------------------------
         with right: 
             if response == 'yes':
