@@ -132,7 +132,8 @@ class ThemeManager:
             curr_dir = os.getcwd()
             print (curr_dir)
             # Specify the new file name and path
-            directory = '/mount/src/viz-automation/pages/'
+            #directory = '/mount/src/viz-automation/pages/'
+            directory = curr_dir +'/pages'
            
             # Iterate over all files in the directory
             for filename in os.listdir(directory):
@@ -254,7 +255,6 @@ class ThemeManager:
         #can only make changes if you choose not to clear the workspace and there is uploaded file
         #CHANGE THE DATA ---------------------------------------------------------------
     
-   
         if clearVal == 'no' and 'uploaded_file' in st.session_state and st.session_state ['uploaded_file'] is not None:
             self.modify_table()
 
@@ -504,9 +504,9 @@ color: {st.session_state['textColor']};  /* Optional: Specify text color */
 
 
                     curr_dir = os.getcwd()
-
+                    print (curr_dir)
                     # Specify the new file name and path
-                    new_file_path = os.path.join(curr_dir, f'/pages/{event}.py')
+                    new_file_path = os.path.join(curr_dir, f'pages/{event}.py')
 
                     try:
                         with open(new_file_path, 'w') as f:
