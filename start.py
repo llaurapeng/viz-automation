@@ -129,12 +129,12 @@ class ThemeManager:
         #CLEARS APP ---------------------------------------
         if clear_resp == 'yes':
             # Specify the directory path
-            #directory = 'llaurapeng/viz-automation/main/pages'
+            directory = 'llaurapeng/viz-automation/main/pages'
 
-            curr_dir = os.getcwd()
+            #curr_dir = os.getcwd()
 
             # Specify the new file name and path
-            directory = curr_dir + '/pages'
+            #directory = curr_dir + '/pages'
 
             # Iterate over all files in the directory
             for filename in os.listdir(directory):
