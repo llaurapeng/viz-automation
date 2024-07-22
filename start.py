@@ -132,7 +132,7 @@ class ThemeManager:
             curr_dir = os.getcwd()
             print (curr_dir)
             # Specify the new file name and path
-            directory = ''
+            directory = '/mount/src/viz-automation/pages/'
            
             # Iterate over all files in the directory
             for filename in os.listdir(directory):
@@ -147,7 +147,7 @@ class ThemeManager:
                     print(f"Error deleting {filename} : {e.strerror}")
                 
             st.session_state ['uploaded_file'] = None
-            st.session_state['page_titles'] = []
+            #st.session_state['page_titles'] = []
 
         return clear_resp
             
