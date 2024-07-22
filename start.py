@@ -6,7 +6,7 @@ import plotly.io as pio
 import openpyxl
 import streamlit as st
 from PIL import Image
-#from rembg import remove 
+from rembg import remove 
 import io
 import os
 import time
@@ -188,7 +188,7 @@ class ThemeManager:
 
                     st.image (resized)
                     st.session_state ['logo'] = resized
-        '''       
+               
         #change logo REMOVE BACKGROUND------------------------------------
         with right: 
             if response == 'yes':
@@ -216,7 +216,7 @@ class ThemeManager:
 
                     st.image (resized)
                     st.session_state ['remove'] = resized
-        '''
+        
 
     def modify_table (self):
         #find all the unique events
