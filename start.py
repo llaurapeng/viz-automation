@@ -18,7 +18,7 @@ import time
 
 # Set page configuration---------------------------------
 st.set_page_config(layout="wide",
-                   page_title="Verizon Survey Vizualizations")
+                   page_title="ROX Score Card")
 
 
 class ThemeManager:
