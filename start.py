@@ -129,8 +129,9 @@ class ThemeManager:
         #CLEARS APP ---------------------------------------
         if clear_resp == 'yes':
             # Specify the directory path
-            directory = '/Users/mqw/Desktop/Automation/pages'
+            directory = 'llaurapeng/viz-automation/main/pages'
 
+              
             # Iterate over all files in the directory
             for filename in os.listdir(directory):
                 filePath = os.path.join(directory, filename)
@@ -500,10 +501,10 @@ color: {st.session_state['textColor']};  /* Optional: Specify text color */
                     st.session_state [f'per_names_ref{event}_original'] = per_names_ref
 
 
-                    curr_dir = '/Users/mqw/Desktop/Automation/pages'
+                    curr_dir = os.getcwd()
 
                     # Specify the new file name and path
-                    new_file_path = os.path.join(curr_dir, f'{event}.py')
+                    new_file_path = os.path.join(curr_dir, f'/pages/{event}.py')
 
                     try:
                         with open(new_file_path, 'w') as f:
