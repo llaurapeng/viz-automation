@@ -131,7 +131,10 @@ class ThemeManager:
             # Specify the directory path
             directory = 'llaurapeng/viz-automation/main/pages'
 
-            #curr_dir = os.getcwd()
+            curr_dir = os.getcwd()
+
+            print (curr_dir)
+
 
             # Specify the new file name and path
             #directory = curr_dir + '/pages'
