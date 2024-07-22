@@ -133,7 +133,8 @@ class ThemeManager:
             print (curr_dir)
             # Specify the new file name and path
             #directory = '/mount/src/viz-automation/pages/'
-            directory = curr_dir +'/pages'
+            #directory = curr_dir +'/pages'
+            directory = ''
            
             # Iterate over all files in the directory
             for filename in os.listdir(directory):
