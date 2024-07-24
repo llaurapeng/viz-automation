@@ -271,8 +271,7 @@ class ThemeManager:
         #can only make changes if you choose not to clear the workspace and there is uploaded file
         #CHANGE THE DATA ---------------------------------------------------------------
     
-        if clearVal == 'no':
-        #'uploaded_file' in st.session_state and st.session_state ['uploaded_file'] is not None:
+        if clearVal == 'no' and uploaded_file in st.session_state and st.session_state ['uploaded_file'] is not None:
             self.modify_table()
 
             st.write("---")
