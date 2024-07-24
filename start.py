@@ -82,6 +82,8 @@ class ThemeManager:
         
         return new_img
     
+    def get_pages(self):
+        return [f.split('.')[0] for f in os.listdir('pages') if f.endswith('.py') and f != '__init__.py']
 
     #UPLOAD FILE --------------------------------------------------------
     
@@ -116,6 +118,19 @@ class ThemeManager:
             #writ the python files
             self.writefile()
 
+            #get list of pages
+            '''pages = self.get_pages()
+            selection = st.sidebar.radio("Go to", pages)
+
+            # Import the selected page
+            page_file = f'pages/{selection}.py'
+            if os.path.exists(page_file):
+                with open(page_file) as f:
+                    exec(f.read())
+            else:
+                st.write("Page not found."
+            '''
+
         return response1
     
     
@@ -147,9 +162,9 @@ class ThemeManager:
                         print(f"Deleted {filename}")
                 except OSError as e:
                     print(f"Error deleting {filename} : {e.strerror}")
-                
+            
             st.session_state ['uploaded_file'] = None
-            #st.session_state['page_titles'] = []
+
 
         return clear_resp
             
@@ -256,23 +271,24 @@ class ThemeManager:
         #can only make changes if you choose not to clear the workspace and there is uploaded file
         #CHANGE THE DATA ---------------------------------------------------------------
     
-        if clearVal == 'no' and 'uploaded_file' in st.session_state and st.session_state ['uploaded_file'] is not None:
+        if clearVal == 'no':
+        #'uploaded_file' in st.session_state and st.session_state ['uploaded_file'] is not None:
             self.modify_table()
 
-        st.write("---")
+            st.write("---")
 
-        #APPLY THE THEME  ---------------------------------------------------------------
-        self.modify_theme()
+            #APPLY THE THEME  ---------------------------------------------------------------
+            self.modify_theme()
 
-        st.write("---")
+            st.write("---")
 
-        #CHANGE THE LOGO  ---------------------------------------------------------------
-        self.change_logo()
+            #CHANGE THE LOGO  ---------------------------------------------------------------
+            self.change_logo()
 
-        st.write("---")
-    
-        #RERUN THE WEB PAGE TO SEE THEME UPDATES  ---------------------------------------------------------------
-        self.reconcile_theme_config()
+            st.write("---")
+        
+            #RERUN THE WEB PAGE TO SEE THEME UPDATES  ---------------------------------------------------------------
+            self.reconcile_theme_config()
 
     def writefile(self):
         file_content = '''
