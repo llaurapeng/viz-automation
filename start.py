@@ -33,7 +33,7 @@ class ThemeManager:
     def initialize_colors(self):
         # Set default values for session state if not already set
         if 'primaryColor' not in st.session_state:
-            st.session_state['primaryColor'] = '#00f900'
+            st.session_state['primaryColor'] = 'blue'
             self.colorss['primaryColor'] = st.session_state['primaryColor']
 
 
@@ -42,7 +42,7 @@ class ThemeManager:
             self.colorss['backgroundColor'] = st.session_state['backgroundColor']
 
         if 'secondaryBackgroundColor' not in st.session_state:
-            st.session_state['secondaryBackgroundColor'] = '#D3D3D3'
+            st.session_state['secondaryBackgroundColor'] = '#ECECEC'
             self.colorss['secondaryBackgroundColor'] = st.session_state['secondaryBackgroundColor']
 
         if 'textColor' not in st.session_state:
