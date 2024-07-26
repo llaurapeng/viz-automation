@@ -41,7 +41,7 @@ class ThemeManager:
             self.colorss['backgroundColor'] = st.session_state['backgroundColor']
 
         if 'secondaryBackgroundColor' not in st.session_state:
-            st.session_state['secondaryBackgroundColor'] = 'grey'
+            st.session_state['secondaryBackgroundColor'] = 'gray'
             self.colorss['secondaryBackgroundColor'] = st.session_state['secondaryBackgroundColor']
 
         if 'textColor' not in st.session_state:
