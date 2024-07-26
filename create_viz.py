@@ -30,7 +30,7 @@ class Viz:
             self.timestamp2 = str (self.data ['Event End Date'].values [0])
             self.timestamp2 =self.timestamp2 [:10]
 
-            self.date_range = self.timestamp1+ ':' + self.timestamp2
+            self.date_range = 'From ' + self.timestamp1+ ' To ' + self.timestamp2
 
             #makes a dictionary with all the KPIs
 
@@ -130,9 +130,9 @@ class Viz:
                     self.colors.append ('#E1EEF2')
 
                 if row ['Index'] > 120:
-                    self.text_color.append ('#26ff26')
+                    self.text_color.append ('#416243')
                 elif row['Index'] <=80:
-                    self.text_color.append ('red')
+                    self.text_color.append ('#EC2B39')
                 else:
                     self.text_color.append ('black')
 
@@ -145,16 +145,16 @@ class Viz:
 
 
             if self.rox_output > 120: 
-                self.text_color_rox = '#26ff26'
-                dot = 'green'
+                self.text_color_rox = '#416243'
+          
 
             elif self.rox_output < 80: 
-                self.text_color_rox = 'red'
-                dot = 'red'
+                self.text_color_rox = '#EC2B39'
+  
             else: 
-                self.text_color_rox = 'yellow'
-                dot = 'purple'
-
+                self.text_color_rox = 'gray'
+                
+            
 
 
     #TABLE 1  ------------------------------------------------------------------
@@ -173,9 +173,9 @@ class Viz:
                 colors.append ('#E1EEF2')
 
             if row ['Index'] > 120:
-                text_color.append ('#26ff26')
+                text_color.append ('#416243')
             elif row['Index'] <=80:
-                text_color.append ('red')
+                text_color.append ('#416243')
             else:
                 text_color.append ('black')
 
@@ -242,6 +242,8 @@ class Viz:
         cell_font_size = [16, 12, 12, 12, 12, 12]  
 
 
+
+
         #add colors
         colors_text = [
             ['black', 'black', 'black', 'black','black', 'black', 'black', 'black','black'],
@@ -278,7 +280,7 @@ class Viz:
         )])
 
 
-        border_color = 'white'
+        border_color = st.session_state ['primaryColor']
         # Add annotation outside the table
         fig2.add_annotation(
             xref='paper', yref='paper',
@@ -316,23 +318,30 @@ class Viz:
                         legend_title_font_color=textColor,
                         legend_font_color=textColor  #change legend items color
 
-
-                
         )
         '''
+
+        #change color, title, and text  
         fig3.update_layout(
         xaxis_title="<b>KPI Names</b>",
         xaxis_title_font=dict(size=14, family="Poppins", color=textColor),
         xaxis_tickfont=dict(size=12, family="Poppins", color=textColor),
-        yaxis_title="<b>Index</b>",
+        yaxis_title="",
         yaxis_title_font=dict(size=14, family="Poppins", color = textColor),
         yaxis_tickfont=dict(size=12, family="Poppins", color=textColor),
-        title="Distribution of Index for KPIs",
+        title="",
         title_font=dict(size=20, family="Poppins", color= textColor),
         legend_title_text="<b>Type</b>",
         legend_title_font=dict(size=14, family="Poppins", color=textColor),
         legend_font=dict(size=12, family="Poppins", color=textColor)  # Change legend items color
     )
+        
+        # Update traces to change text size
+        fig3.update_traces(
+        texttemplate='%{y}',  # Ensure text displays the y-values
+        textfont=dict(size=20, family="Poppins", color=textColor),  # Adjust size as needed
+        textposition='outside'  # Position text outside the bars
+        )
 
         return fig3
 

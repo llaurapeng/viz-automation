@@ -11,9 +11,12 @@ import onnxruntime
 import io
 import os
 import time
+import sys
+
+from create_viz import Viz
+
 
 #check if logo and remove key exists if not set to False
-
 
 
 # Set page configuration---------------------------------
@@ -38,7 +41,7 @@ class ThemeManager:
             self.colorss['backgroundColor'] = st.session_state['backgroundColor']
 
         if 'secondaryBackgroundColor' not in st.session_state:
-            st.session_state['secondaryBackgroundColor'] = '#f0f0f0'
+            st.session_state['secondaryBackgroundColor'] = 'grey'
             self.colorss['secondaryBackgroundColor'] = st.session_state['secondaryBackgroundColor']
 
         if 'textColor' not in st.session_state:
@@ -133,42 +136,21 @@ class ThemeManager:
 
         return response1
     
-    
-    
+  
     #CLEAR WORKSPACE --------------------------------------------------------
-
+    '''
     def clear_space(self):
-        clear_resp = st.radio ('Would you like to clear your workspace?',
-                                 ['yes','no'],
-                                 index = 1)
+        st.radio ('Would you like to clear your workspace?',
+                               ['yes','no'],index = 1, key = 'clear')
+        clear_resp= st.session_state ['clear']
         #CLEARS APP ---------------------------------------
         if clear_resp == 'yes':
-            # Specify the directory path
-            curr_dir = os.getcwd()
-            print (curr_dir)
-            # Specify the new file name and path
-            #directory = '/mount/src/viz-automation/pages/'
-            directory = curr_dir +'/pages'
-            #directory = ''
-           
-            # Iterate over all files in the directory
-            for filename in os.listdir(directory):
-                filePath = os.path.join(directory, filename)
-                try:
-                    # Check if the path is a file (not a directory)
-                    if os.path.isfile(filePath):
-                        # Attempt to remove the file
-                        os.remove(filePath)
-                        print(f"Deleted {filename}")
-                except OSError as e:
-                    print(f"Error deleting {filename} : {e.strerror}")
-            
-            st.session_state ['uploaded_file'] = None
-
+            print ('clear')
+            st.sidebar.empty()
 
         return clear_resp
+    '''
             
-    
     #modify the theme of the report
     def modify_theme(self):
         st.session_state['primaryColor'] = st.color_picker('Primary Color', st.session_state['primaryColor'])
@@ -191,11 +173,11 @@ class ThemeManager:
             if response == 'yes':
                 st.session_state['logo'] = st.file_uploader ('Upload a image for the logo: ', type = ['png','jpeg'])
                 if st.session_state['logo'] is not None:
-                    resized = self.resize_image_aspect_ratio(st.session_state ['logo'], 200,300)
+                    resized = self.resize_image_aspect_ratio(st.session_state ['logo'], 100,200)
                     momo = Image.open ('momo.png')
 
                     # Resize the momo image to a smaller size
-                    momo.thumbnail((30, 30), Image.LANCZOS) 
+                    momo.thumbnail((15, 15), Image.LANCZOS) 
 
                     base_width, base_height = resized.size
                     overlay_width, overlay_height = momo.size
@@ -217,13 +199,13 @@ class ThemeManager:
                 if st.session_state['remove'] is not None:
             
                     #resize the image
-                    resized = self.resize_image_aspect_ratio(st.session_state['remove'], 200,300)
+                    resized = self.resize_image_aspect_ratio(st.session_state['remove'], 100,200)
 
                     resized = remove (resized)
 
                     momo = Image.open ('momo.png')
                     # Resize the momo image to a smaller size
-                    momo.thumbnail((35, 35), Image.LANCZOS) 
+                    momo.thumbnail((15, 15), Image.LANCZOS) 
 
                     base_width, base_height = resized.size
                     overlay_width, overlay_height = momo.size
@@ -241,6 +223,7 @@ class ThemeManager:
 
     def modify_table (self):
         #find all the unique events
+        events_choosen = ''
         if 'events' in st.session_state: 
             events = st.session_state ['events']
             events_choosen = st.multiselect ('Would you like to modify any of these events benchmarks?',
@@ -256,227 +239,60 @@ class ThemeManager:
                 if orginal:
                     st.session_state [f'per_weight_benchmarks{event}'] = st.session_state [f'per_weight_benchmarks{event}_original']
 
-
-    def apply_theme(self):
-        #UPLOAD A FILE  ---------------------------------------------------------------
+    def start_page (self): 
         uploadNum = self.upload_file()
 
         st.write("---")
 
          #CLEAR THE SPACE ---------------------------------------------------------------
-        clearVal = self.clear_space()
+        #clearVal = self.clear_space()
 
         st.write("---")
 
         #can only make changes if you choose not to clear the workspace and there is uploaded file
         #CHANGE THE DATA ---------------------------------------------------------------
-    
-        if clearVal == 'no' and 'uploaded_file' in st.session_state and st.session_state ['uploaded_file'] is not None:
+        if'uploaded_file' in st.session_state and st.session_state ['uploaded_file'] is not None:
             self.modify_table()
 
             st.write("---")
 
-            #APPLY THE THEME  ---------------------------------------------------------------
-            self.modify_theme()
+        #APPLY THE THEME  ---------------------------------------------------------------
+        self.modify_theme()
 
-            st.write("---")
+        st.write("---")
 
-            #CHANGE THE LOGO  ---------------------------------------------------------------
-            self.change_logo()
+        #CHANGE THE LOGO  ---------------------------------------------------------------
+        self.change_logo()
 
-            st.write("---")
+        st.write("---")
+    
+        #RERUN THE WEB PAGE TO SEE THEME UPDATES  ---------------------------------------------------------------
+        self.reconcile_theme_config()
+
+    def update_sidebar(self):
+        options = ['start']
+        st.session_state.radio_options = ['start']
+        st.session_state ['current_page'] = 'start'
+        #if there is uploaded file then update the side bar
+        if 'uploaded_file' in st.session_state and st.session_state['uploaded_file'] is not None:
+            print ('uploaded file not empty')
+            st.session_state.radio_options = options + list (st.session_state ['events'])
+            st.session_state['current_page'] = st.sidebar.radio ('Choose an option',st.session_state.radio_options)
+            #print (st.session_state['current_page'])
+
+    def apply_theme(self):
+        self.update_sidebar()
+
+        if 'current_page' in st.session_state and st.session_state ['current_page'] == 'start':
+            self.start_page()
+
         
-            #RERUN THE WEB PAGE TO SEE THEME UPDATES  ---------------------------------------------------------------
-            self.reconcile_theme_config()
+        #run whichever event is choosen
+        elif 'current_page' in st.session_state and st.session_state ['current_page'] != 'start':
+            self.run_event2 (st.session_state ['current_page'])
+
 
     def writefile(self):
-        file_content = '''
-
-import pandas as pd
-#from .. import start as viz
-import streamlit as st
-import openpyxl
-from create_viz import Viz
-from PIL import Image
-from rembg import remove 
-import os
-
-# Define your custom CSS---------------------------------
-
-obj = Viz (st.session_state [f'per_data{event}'], st.session_state [f'per_weight_benchmarks{event}'],st.session_state [f'per_names_ref{event}'])
-
-
-#border radius 50 
-custom_css_company = f"""
-        <style>
-         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        .my-container_comp {{
-        background-color: {st.session_state['primaryColor']};
-        padding: 10px;
-        border-radius: 50px; 
-        margin-top: 2;  /* Remove top margin */
-        margin-bottom: 30px;  /* Remove bottom margin */
-        text-align: center;  /* Center text horizontally */
-        font-size: 40px;
-        font-weight: bold;
-        font-family 'Poppins';
-        color: {st.session_state['textColor']};  /* Optional: Specify text color */
-        }}
-        </style>
-        """
-
-#TITLE ---------------------------------------------
-
-if 'company_name' in st.session_state and st.session_state ['company_name'] == ' ': 
-    print ('empty')
-    print (st.session_state ['logo'])
-elif 'company_name' in st.session_state: 
-
-        st.markdown(custom_css_company, unsafe_allow_html=True)
-        company = st.session_state ['company_name']
-        st.markdown(f'<div class="my-container_comp"> {company}</div>', unsafe_allow_html=True)
-
-
-#ROX TITLE ---------------------------------------------
-
-st.markdown(custom_css_company, unsafe_allow_html=True)
-st.markdown('<div class="my-container_comp"> Return on Experience Scorecard (ROX)</div>', unsafe_allow_html=True)
-
-#LOGO IMAGE -------------------------------------------------------------------------------------------------------
-col1, col2, col3, col4, col5 = st.columns([1, 1, 1,1,1])  # The middle column will be twice as wide as the side columns
-
-print ('HI')
-with col3:
-    #st.image(st.session_state ['logo'])
-    if 'logo' in st.session_state and st.session_state['logo'] != None:
-        st.image(st.session_state ['logo'])
-        print ('this')
-
-    elif 'remove' in st.session_state and st.session_state['remove'] != None:
-        st.image (st.session_state ['remove'])
-
-
-#Activation name and dateslide-------------------------------------------------------------------------------------------------------
-
-#border radius 80 
-
-custom_css = f"""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-.my-container {{
-background-color: {st.session_state['primaryColor']};
-padding: 10px;
-border-radius: 80px;
-margin-top: 2;  /* Remove top margin */
-margin-bottom: 20px;  /* Remove bottom margin */
-font-size: 30px;
-text-align: center;  /* Center text horizontally */
-font-weight: bold;
-font-family 'Poppins';
-color: {st.session_state['textColor']};  /* Optional: Specify text color */
-}}
-</style>
-"""
-
-# Apply the custom CSS
-st.markdown(custom_css, unsafe_allow_html=True)
-
-left, center, right = st.columns([1,5,1])
-data = obj.data
-eventName = data ['Event Name'].values[0]
-with center: 
-    st.markdown(f'<div class="my-container">{eventName}</div>', unsafe_allow_html=True)
-
-#border radius 20
-
-custom_css2 = f"""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-.my-container2 {{
-background-color: {st.session_state['primaryColor']};
-padding: 1px;
-border-radius: 20px;
-margin-top: 1px;  /* Remove top margin */
-margin-bottom: 20px;  /* Remove bottom margin */
-font-size: 23px;
-text-align: center;  /* Center text horizontally */
-font-weight: bold;
-font-family 'Poppins';
-color: {st.session_state['textColor']};  /* Optional: Specify text color */
-}}
-</style>
-"""
-
-st.markdown(custom_css2, unsafe_allow_html=True)
-
-left, center, right = st.columns([1,3,1])
-with center: 
-    st.markdown(f'<div class="my-container2">Performance Report Card | {obj.date_range}</div>', unsafe_allow_html=True)
-
-
-#first slide-------------------------------------------------------------------------------------------------------
-left, right = st.columns (2)
-
-with left: 
-    container1 = st.container (border = False, height = 500)
-    container1.markdown('<div class="my-container2">ROX Score</div>', unsafe_allow_html=True)
-    #st.write (st.session_state['primaryColor'])
-    container1.plotly_chart (obj.fig4 (st.session_state['primaryColor'], st.session_state ['textColorPlots']),use_container_width=True)
-
-
-with right:
-    container2 = st.container (border = False, height = 500)
-    container2.markdown('<div class="my-container2">Score Summary</div>', unsafe_allow_html=True)
-    container2.plotly_chart (obj.table1 (st.session_state['primaryColor'], st.session_state ['textColor']), use_container_width = True)
-
-
-with st.expander ('ROX Score Breakdown'):
-    st.markdown('<div class="my-container2">Score Summary</div>', unsafe_allow_html=True)
-    st.plotly_chart (obj.table2 (st.session_state['primaryColor'], st.session_state ['textColor']),use_container_width = True)
-
-#second slide-------------------------------------------------------------------------------------------------------
-
-
-
-
-left, right = st.columns ([1,2])
-
-with right: 
-    st.plotly_chart (obj.fig3(st.session_state['primaryColor'], st.session_state ['textColorPlots']))
-
-with left: 
-    custom_css3 = f"""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-.my-container3 {{
-background-color: {st.session_state['primaryColor']};
-padding: 50px;
-margin-top: 0px;
-border-radius: 20px;
-margin-bottom: 0px;  /* Remove bottom margin */
-height: 300px
-font-size: 19px;
-text-align: center;  /* Center text horizontally */
-font-weight: bold;
-font-family 'Poppins';
-color: {st.session_state['textColor']};  /* Optional: Specify text color */
-}}
-</style>
-"""
-    st.markdown(custom_css3, unsafe_allow_html=True)
-    st.markdown(
-        '<div class="my-container3">'
-        '<span style="font-size:30px;">ROX Visual Breakdown</span><br>'
-        '<span style="font-size:20px;">Total Rox<br> </span>'
-        f'<span style="font-size:80px;">{obj.rox_output}</span>'
-        '</div>', 
-        unsafe_allow_html=True
-    )
-
-'''
-
-        #end of file content -------------------------------------------
-
         if 'uploaded_file' in st.session_state: 
             uploaded = st.session_state ['uploaded_file']
 
@@ -504,7 +320,7 @@ color: {st.session_state['textColor']};  /* Optional: Specify text color */
                 events = data['Event ID'].unique()
                 st.session_state ['events'] = events
 
-                #creates the filtered data sets
+                #creates the filtered data sets in the session_state
                 for event in events: 
                     per_data = data [data['Event ID'] == event]
                     st.session_state [f'per_data{event}'] = per_data
@@ -519,25 +335,312 @@ color: {st.session_state['textColor']};  /* Optional: Specify text color */
                     st.session_state [f'per_names_ref{event}_original'] = per_names_ref
 
 
-                    curr_dir = os.getcwd()
+                    '''curr_dir = os.getcwd()
                     print (curr_dir)
                     # Specify the new file name and path
                     new_file_path = os.path.join(curr_dir, f'pages/{event}.py')
 
                     try:
                         with open(new_file_path, 'w') as f:
-                            f.write (f'''event = {event}''')
+                            f.write (f'event = {event}')
                             f.write(file_content)
                             print(f"New file '{new_file_path}' created successfully.")
                     except IOError:
                         print(f"Error: Could not write to file '{new_file_path}'.")
+                    '''
 
+
+    def run_event2 (self, event):
+        obj = Viz (st.session_state [f'per_data{event}'], st.session_state [f'per_weight_benchmarks{event}'],st.session_state [f'per_names_ref{event}'])
+
+
+    
+        left, right = st.columns ([1,1.5])
+        with left: 
+            #LOGO ------------------------------------------------------------------------------
+            if 'logo' in st.session_state and st.session_state['logo'] != None:
+                st.image(st.session_state ['logo'])
+
+            elif 'remove' in st.session_state and st.session_state['remove'] != None:
+                st.image (st.session_state ['remove'])
+
+            custom_css3 = f"""
+            <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+            .my-container3 {{
+                background-color: {st.session_state['primaryColor']};
+                padding: 0;  /* Remove padding */
+                margin: 0;   /* Remove margin */
+                width: 300px;  /* Set width and height to make it a circle */
+                height: 300px;
+                border-radius: 50%; /* Makes it a circle */
+                display: flex;
+                flex-direction: column; /* Stack content vertically */
+                align-items: center;    /* Center horizontally */
+                justify-content: center; /* Center vertically */
+                font-size: 19px;
+                font-weight: bold;
+                font-family: 'Poppins', sans-serif;
+                color: {st.session_state['textColor']};  /* Optional: Specify text color */
+            }}
+            .my-container3 span {{
+                display: block;  /* Ensures each span behaves as a block element */
+                text-align: center; /* Center text inside each block */
+            }}
+            </style>
+            """
+
+            st.markdown(custom_css3, unsafe_allow_html=True)
+            st.markdown(
+                '<div class="my-container3">'
+                '<span style="font-size:40px; margin-bottom: 10px;">Total Rox</span>'
+                f'<span style="font-size:80px; margin-top: 10px;">{obj.rox_output}</span>'
+                '</div>', 
+                unsafe_allow_html=True
+            )
+
+            st.write ('')
             
+            # HISTOGRAM ------------------------------------------------------------
+            st.plotly_chart (obj.fig3(st.session_state['primaryColor'], st.session_state ['textColorPlots']),use_container_width = True)
 
+        with right:
+            st.write ('')
+            st.write ('')
+            st.write ('')
+            st.write ('')
+            st.write ('')
+            st.write ('')
+            st.write ('')
+            st.write ('')
+            
+            #border radius 50 
+            custom_css_company = f"""
+                <style>
+                @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+                .my-container_comp {{
+                background-color: {st.session_state['primaryColor']};
+                padding: 10px;
+                border-radius: 50px; 
+                margin-top: 2;  /* Remove top margin */
+                margin-bottom: 30px;  /* Remove bottom margin */
+                text-align: center;  /* Center text horizontally */
+                font-size: 40px;
+                font-weight: bold;
+                font-family 'Poppins';
+                color: {st.session_state['textColor']};  /* Optional: Specify text color */
+                }}
+                </style>
+                """
+            st.markdown(custom_css_company, unsafe_allow_html=True)
+            st.markdown('<div class="my-container_comp"> Return on Experience Scorecard (ROX)</div>', unsafe_allow_html=True)
+
+
+            custom_css = f"""
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        .my-container {{
+        background-color: {st.session_state['primaryColor']};
+        padding: 10px;
+        border-radius: 80px;
+        margin-top: 2;  /* Remove top margin */
+        margin-bottom: 20px;  /* Remove bottom margin */
+        font-size: 20px;
+        text-align: center;  /* Center text horizontally */
+        font-weight: bold;
+        font-family 'Poppins';
+        color: {st.session_state['textColor']};  /* Optional: Specify text color */
+        }}
+        </style>
+        """
+
+            # Apply the custom CSS
+            st.markdown(custom_css, unsafe_allow_html=True)
+            data = obj.data
+            eventName = data ['Event Name'].values[0]
+            st.markdown(f'<div class="my-container">{eventName} <br> {obj.date_range}</div>', unsafe_allow_html=True)
+
+
+
+            #HISTOGRAM ---------------
+            st.plotly_chart (obj.table2 (st.session_state['primaryColor'], st.session_state ['textColor']),use_container_width = True)
+
+
+    def run_event (self, event):
+        obj = Viz (st.session_state [f'per_data{event}'], st.session_state [f'per_weight_benchmarks{event}'],st.session_state [f'per_names_ref{event}'])
+
+        #border radius 50 
+        custom_css_company = f"""
+                <style>
+                @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+                .my-container_comp {{
+                background-color: {st.session_state['primaryColor']};
+                padding: 10px;
+                border-radius: 50px; 
+                margin-top: 2;  /* Remove top margin */
+                margin-bottom: 30px;  /* Remove bottom margin */
+                text-align: center;  /* Center text horizontally */
+                font-size: 40px;
+                font-weight: bold;
+                font-family 'Poppins';
+                color: {st.session_state['textColor']};  /* Optional: Specify text color */
+                }}
+                </style>
+                """
+
+        #TITLE ---------------------------------------------
+
+        if 'company_name' in st.session_state and st.session_state ['company_name'] == ' ': 
+            print ('empty')
+            print (st.session_state ['logo'])
+        elif 'company_name' in st.session_state: 
+
+                st.markdown(custom_css_company, unsafe_allow_html=True)
+                company = st.session_state ['company_name']
+                st.markdown(f'<div class="my-container_comp"> {company}</div>', unsafe_allow_html=True)
+
+
+        #ROX TITLE ---------------------------------------------
+
+        st.markdown(custom_css_company, unsafe_allow_html=True)
+        st.markdown('<div class="my-container_comp"> Return on Experience Scorecard (ROX)</div>', unsafe_allow_html=True)
+
+        #LOGO IMAGE -------------------------------------------------------------------------------------------------------
+        col1, col2, col3, col4, col5 = st.columns([1, 1, 1,1,1])  # The middle column will be twice as wide as the side columns
+
+
+        with col3:
+            #st.image(st.session_state ['logo'])
+            if 'logo' in st.session_state and st.session_state['logo'] != None:
+                st.image(st.session_state ['logo'])
+
+
+            elif 'remove' in st.session_state and st.session_state['remove'] != None:
+                st.image (st.session_state ['remove'])
+
+
+        #ACTIVATION NAME AND DATE-------------------------------------------------------------------------------------------------------
+
+        #border radius 80 
+
+        custom_css = f"""
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        .my-container {{
+        background-color: {st.session_state['primaryColor']};
+        padding: 10px;
+        border-radius: 80px;
+        margin-top: 2;  /* Remove top margin */
+        margin-bottom: 20px;  /* Remove bottom margin */
+        font-size: 30px;
+        text-align: center;  /* Center text horizontally */
+        font-weight: bold;
+        font-family 'Poppins';
+        color: {st.session_state['textColor']};  /* Optional: Specify text color */
+        }}
+        </style>
+        """
+
+        # Apply the custom CSS
+        st.markdown(custom_css, unsafe_allow_html=True)
+
+        left, center, right = st.columns([1,5,1])
+        data = obj.data
+        eventName = data ['Event Name'].values[0]
+        with center: 
+            st.markdown(f'<div class="my-container">{eventName}</div>', unsafe_allow_html=True)
+
+        #border radius 20
+
+        custom_css2 = f"""
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        .my-container2 {{
+        background-color: {st.session_state['primaryColor']};
+        padding: 1px;
+        border-radius: 20px;
+        margin-top: 1px;  /* Remove top margin */
+        margin-bottom: 20px;  /* Remove bottom margin */
+        font-size: 23px;
+        text-align: center;  /* Center text horizontally */
+        font-weight: bold;
+        font-family 'Poppins';
+        color: {st.session_state['textColor']};  /* Optional: Specify text color */
+        }}
+        </style>
+        """
+
+        st.markdown(custom_css2, unsafe_allow_html=True)
+
+        left, center, right = st.columns([1,3,1])
+        with center: 
+            st.markdown(f'<div class="my-container2">Performance Report Card | {obj.date_range}</div>', unsafe_allow_html=True)
+
+
+        #first slide-------------------------------------------------------------------------------------------------------
+        left, right = st.columns (2)
+
+        with left: 
+            container1 = st.container (border = False, height = 500)
+            container1.markdown('<div class="my-container2">ROX Score</div>', unsafe_allow_html=True)
+            #st.write (st.session_state['primaryColor'])
+            container1.plotly_chart (obj.fig4 (st.session_state['primaryColor'], st.session_state ['textColorPlots']),use_container_width=True)
+
+
+        with right:
+            container2 = st.container (border = False, height = 500)
+            container2.markdown('<div class="my-container2">Score Summary</div>', unsafe_allow_html=True)
+            container2.plotly_chart (obj.table1 (st.session_state['primaryColor'], st.session_state ['textColor']), use_container_width = True)
+
+
+        with st.expander ('ROX Score Breakdown'):
+            st.markdown('<div class="my-container2">Score Summary</div>', unsafe_allow_html=True)
+            st.plotly_chart (obj.table2 (st.session_state['primaryColor'], st.session_state ['textColor']),use_container_width = True)
+
+        #second slide-------------------------------------------------------------------------------------------------------
+
+
+        left, right = st.columns ([1,2])
+
+        with right: 
+            #HISTOGRAM --------------------------------------------------------------------------------------------------------
+            st.plotly_chart (obj.fig3(st.session_state['primaryColor'], st.session_state ['textColorPlots']))
+
+        with left: 
+            # ROX OUTPUT SCORE ------------------------------------------------------------------------------
+            custom_css3 = f"""
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        .my-container3 {{
+        background-color: {st.session_state['primaryColor']};
+        padding: 50px;
+        margin-top: 0px;
+        border-radius: 20px;
+        margin-bottom: 0px;  /* Remove bottom margin */
+        height: 300px
+        font-size: 19px;
+        text-align: center;  /* Center text horizontally */
+        font-weight: bold;
+        font-family 'Poppins';
+        color: {st.session_state['textColor']};  /* Optional: Specify text color */
+        }}
+        </style>
+        """
+            
+        st.markdown(custom_css3, unsafe_allow_html=True)
+        st.markdown(
+            '<div class="my-container3">'
+            '<span style="font-size:30px;">ROX Visual Breakdown</span><br>'
+            '<span style="font-size:20px;">Total Rox<br> </span>'
+            f'<span style="font-size:80px;">{obj.rox_output}</span>'
+            '</div>', 
+            unsafe_allow_html=True
+        )
 
 # Usage
 theme_manager = ThemeManager()
 theme_manager.apply_theme()
+
 
 print ('----------')
 
