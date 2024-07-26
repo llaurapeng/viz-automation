@@ -41,7 +41,7 @@ class ThemeManager:
             self.colorss['backgroundColor'] = st.session_state['backgroundColor']
 
         if 'secondaryBackgroundColor' not in st.session_state:
-            st.session_state['secondaryBackgroundColor'] = '#808080'
+            st.session_state['secondaryBackgroundColor'] = '#D3D3D3'
             self.colorss['secondaryBackgroundColor'] = st.session_state['secondaryBackgroundColor']
 
         if 'textColor' not in st.session_state:
@@ -121,35 +121,9 @@ class ThemeManager:
             #writ the python files
             self.writefile()
 
-            #get list of pages
-            '''pages = self.get_pages()
-            selection = st.sidebar.radio("Go to", pages)
-
-            # Import the selected page
-            page_file = f'pages/{selection}.py'
-            if os.path.exists(page_file):
-                with open(page_file) as f:
-                    exec(f.read())
-            else:
-                st.write("Page not found."
-            '''
-
         return response1
     
   
-    #CLEAR WORKSPACE --------------------------------------------------------
-    '''
-    def clear_space(self):
-        st.radio ('Would you like to clear your workspace?',
-                               ['yes','no'],index = 1, key = 'clear')
-        clear_resp= st.session_state ['clear']
-        #CLEARS APP ---------------------------------------
-        if clear_resp == 'yes':
-            print ('clear')
-            st.sidebar.empty()
-
-        return clear_resp
-    '''
             
     #modify the theme of the report
     def modify_theme(self):
@@ -286,7 +260,7 @@ class ThemeManager:
         if 'current_page' in st.session_state and st.session_state ['current_page'] == 'start':
             self.start_page()
 
-        
+    
         #run whichever event is choosen
         elif 'current_page' in st.session_state and st.session_state ['current_page'] != 'start':
             self.run_event2 (st.session_state ['current_page'])
@@ -335,34 +309,22 @@ class ThemeManager:
                     st.session_state [f'per_names_ref{event}_original'] = per_names_ref
 
 
-                    '''curr_dir = os.getcwd()
-                    print (curr_dir)
-                    # Specify the new file name and path
-                    new_file_path = os.path.join(curr_dir, f'pages/{event}.py')
-
-                    try:
-                        with open(new_file_path, 'w') as f:
-                            f.write (f'event = {event}')
-                            f.write(file_content)
-                            print(f"New file '{new_file_path}' created successfully.")
-                    except IOError:
-                        print(f"Error: Could not write to file '{new_file_path}'.")
-                    '''
-
+                
 
     def run_event2 (self, event):
         obj = Viz (st.session_state [f'per_data{event}'], st.session_state [f'per_weight_benchmarks{event}'],st.session_state [f'per_names_ref{event}'])
-
-
+        
+      
     
         left, right = st.columns ([1,1.5])
         with left: 
-            #LOGO ------------------------------------------------------------------------------
+             
             if 'logo' in st.session_state and st.session_state['logo'] != None:
-                st.image(st.session_state ['logo'])
+                    st.image(st.session_state ['logo'])
 
             elif 'remove' in st.session_state and st.session_state['remove'] != None:
                 st.image (st.session_state ['remove'])
+
 
             custom_css3 = f"""
             <style>
@@ -378,7 +340,7 @@ class ThemeManager:
                 flex-direction: column; /* Stack content vertically */
                 align-items: center;    /* Center horizontally */
                 justify-content: center; /* Center vertically */
-                font-size: 19px;
+                font-size: 10px;
                 font-weight: bold;
                 font-family: 'Poppins', sans-serif;
                 color: {st.session_state['textColor']};  /* Optional: Specify text color */
@@ -399,7 +361,8 @@ class ThemeManager:
                 unsafe_allow_html=True
             )
 
-            st.write ('')
+            #st.write ('')
+
             
             # HISTOGRAM ------------------------------------------------------------
             st.plotly_chart (obj.fig3(st.session_state['primaryColor'], st.session_state ['textColorPlots']),use_container_width = True)
@@ -412,7 +375,7 @@ class ThemeManager:
             st.write ('')
             st.write ('')
             st.write ('')
-            st.write ('')
+           
             
             #border radius 50 
             custom_css_company = f"""
@@ -425,7 +388,7 @@ class ThemeManager:
                 margin-top: 2;  /* Remove top margin */
                 margin-bottom: 30px;  /* Remove bottom margin */
                 text-align: center;  /* Center text horizontally */
-                font-size: 40px;
+                font-size: 30px;
                 font-weight: bold;
                 font-family 'Poppins';
                 color: {st.session_state['textColor']};  /* Optional: Specify text color */
@@ -462,7 +425,7 @@ class ThemeManager:
 
 
 
-            #HISTOGRAM ---------------
+            #TABLE ---------------
             st.plotly_chart (obj.table2 (st.session_state['primaryColor'], st.session_state ['textColor']),use_container_width = True)
 
 
