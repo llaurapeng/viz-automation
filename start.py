@@ -21,7 +21,8 @@ from create_viz import Viz
 
 # Set page configuration---------------------------------
 st.set_page_config(layout="wide",
-                   page_title="ROX Score Card")
+                   page_title="ROX Score Card",
+                   page_icon = 'momo.png')
 
 
 class ThemeManager:
@@ -221,7 +222,7 @@ class ThemeManager:
          #CLEAR THE SPACE ---------------------------------------------------------------
         #clearVal = self.clear_space()
 
-        st.write("---")
+
 
         #can only make changes if you choose not to clear the workspace and there is uploaded file
         #CHANGE THE DATA ---------------------------------------------------------------
